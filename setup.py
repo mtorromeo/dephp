@@ -30,10 +30,11 @@ setup(
     author = "Massimiliano Torromeo",
     author_email = "massimiliano.torromeo@gmail.com",
     url = application.url,
-    download_url = "{}/tarball/v{}".format(application.url, application.version),
+    download_url = "{0}/tarball/v{1}".format(application.url, application.version),
     classifiers = [
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: BSD License",
         "Operating System :: MacOS :: MacOS X",
