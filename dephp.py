@@ -35,7 +35,6 @@ def main():
     parser = Parser(prog=name, description=description, version="%(prog)s " + version)
 
     if argparse:
-        parser.add_argument('-V', '--version', action='version')
         add_argument(parser, 'file', nargs='?', help='The file to read. If not specified it will be read from STDIN')
 
     add_argument(parser, '-m', '--metadata', action="store_true", help='Print response metadata')
