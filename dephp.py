@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 # Author: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
@@ -6,7 +6,7 @@
 
 name = "dephp"
 description = "Unofficial CLI application that decodes files through unphp.net web service"
-version = "0.2.0"
+version = "0.3.0"
 url = "http://github.com/mtorromeo/dephp"
 
 import os
@@ -14,7 +14,7 @@ import sys
 
 
 def main():
-    import ConfigParser
+    import configparser
 
     try:
         import setproctitle
@@ -22,41 +22,28 @@ def main():
     except ImportError:
         pass
 
-    try:
-        import argparse
-        Parser = argparse.ArgumentParser
-        add_argument = argparse.ArgumentParser.add_argument
-    except ImportError:
-        argparse = False
-        import optparse
-        Parser = optparse.OptionParser
-        add_argument = optparse.OptionParser.add_option
+    import argparse
+    Parser = argparse.ArgumentParser
 
-    parser = Parser(prog=name, description=description, version="%(prog)s " + version)
+    parser = Parser(prog=name, description=description)
+    parser.add_argument('-V', '--version', action='version', version="%(prog)s " + version)
 
-    if argparse:
-        add_argument(parser, 'file', nargs='?', help='The file to read. If not specified it will be read from STDIN')
+    parser.add_argument('file', nargs='?', help='The file to read. If not specified it will be read from STDIN')
 
-    add_argument(parser, '-m', '--metadata', action="store_true", help='Print response metadata')
-    add_argument(parser, '-a', '--apikey', help='Unphp.net API key')
-    add_argument(parser, '-o', '--output', help="Write the result to OUTPUT. If not specified it will be printed to STDOUT")
+    parser.add_argument('-m', '--metadata', action="store_true", help='Print response metadata')
+    parser.add_argument('-a', '--apikey', help='Unphp.net API key')
+    parser.add_argument('-o', '--output', help="Write the result to OUTPUT. If not specified it will be printed to STDOUT")
 
-    if argparse:
-        args = vars(parser.parse_args())
-    else:
-        (args, posargs) = parser.parse_args()
-        args = vars(args)
-        if posargs:
-            args['file'] = posargs[0]
+    args = vars(parser.parse_args())
 
 
-    config = ConfigParser.SafeConfigParser(defaults=dict(
+    config = configparser.SafeConfigParser(defaults=dict(
         entrypoint="http://www.unphp.net/api/v2/post",
         apikey=False
     ))
     try:
         config.read(["/etc/{0}.conf".format(name), os.path.expanduser("~/.{0}.conf".format(name))])
-    except ConfigParser.Error as e:
+    except configparser.Error as e:
         sys.exit(e.message)
 
     if not args.get('apikey', False):
@@ -79,17 +66,17 @@ def run(apikey, entrypoint="http://www.unphp.net/api/v2/post", file=False, metad
 
     if metadata:
         for k,v in r.items():
-            print "{0: >16} {1}".format(k, v)
-        print
+            print("{0: >16} {1}".format(k, v))
+        print("")
 
 
     if r['result'] == 'success':
         r = requests.get(r['output'])
         if output:
-            with open(output, 'wb') as f:
+            with open(output, 'w') as f:
                 f.write(r.text[28:])
         else:
-            print r.text
+            print(r.text)
 
 
 if __name__ == '__main__':
