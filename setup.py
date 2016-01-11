@@ -33,6 +33,7 @@ setup(
     download_url = "{0}/tarball/v{1}".format(application.url, application.version),
     classifiers = [
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
         "Development Status :: 5 - Production/Stable",
         "License :: OSI Approved :: BSD License",

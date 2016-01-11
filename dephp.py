@@ -14,7 +14,10 @@ import sys
 
 
 def main():
-    import configparser
+    try:
+        import configparser
+    except ImportError:
+        import ConfigParser as configparser
 
     try:
         import setproctitle
